@@ -217,6 +217,18 @@ function LibraryWords(all: any) {
       colorScheme == 'dark' ? { backgroundColor: "black", } : { backgroundColor: "white", }
     ]}>
 
+      <View style={styles.flexRow}>
+        <View
+          style={[
+            styles.input,
+            { justifyContent: 'center', alignItems: 'center' },
+            colorScheme == 'dark' ? { borderColor: "white", } : { borderColor: "black", }
+          ]}
+        >
+          <Text style={[colorScheme == 'dark' ? { color: "white", } : { color: "black", }]}>{groupName}</Text>
+        </View>
+      </View>
+
       <Text style={{ color: 'red' }}>{groupId}{groupName}</Text>
 
     </View>
@@ -241,7 +253,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   input: {
-    borderColor: "white",
     borderRadius: 4,
     borderWidth: 1,
     flex: 1,
