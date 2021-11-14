@@ -98,7 +98,7 @@ export default function Library() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>SQLite Example</Text>
+      <Text style={styles.heading}>Add new words' group</Text>
 
       {Platform.OS === "web" ? (
         <View
@@ -117,7 +117,7 @@ export default function Library() {
                 add(text);
                 setText(null);
               }}
-              placeholder="what do you need to do?"
+              placeholder="How will you call a new group?"
               style={styles.input}
               value={text}
             />
