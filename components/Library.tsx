@@ -10,6 +10,7 @@ import {
   View,
   Alert,
 } from "react-native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SQLite from "expo-sqlite";
 
 function openDatabase() {
@@ -52,7 +53,7 @@ function Items({ onPressItem }) {
       {items.map(({ id, value }) => (
         <TouchableOpacity
           key={id}
-          onPress={() => onPressItem && onPressItem(id)}
+          onPress={() => onPressItem && onPressItem(id, value)}
           style={{
             borderColor: "#000",
             borderWidth: 1,
@@ -66,7 +67,18 @@ function Items({ onPressItem }) {
   );
 }
 
-export default function Library() {
+const Lib = createNativeStackNavigator();
+
+export default function Library({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  return (
+    <Lib.Navigator>
+      <Lib.Screen name="LibraryGroups" component={LibraryGroups} options={{ headerShown: false }} />
+      <Lib.Screen name="LibraryWords" component={LibraryWords} options={{ headerShown: false }} />
+    </Lib.Navigator>
+  );
+}
+
+function LibraryGroups({ navigation }: any) {
   const [text, setText] = React.useState(null);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
 
@@ -98,7 +110,7 @@ export default function Library() {
     );
   };
 
-  const remove = (id:number) => {
+  const remove = (id: number) => {
     db.transaction(
       (tx) => {
         tx.executeSql(`delete from items where id = ?;`, [id]);
@@ -132,11 +144,12 @@ export default function Library() {
       </View>
 
       {/* List */}
-      <ScrollView style={[styles.listArea, colorScheme =='dark' ? {backgroundColor: "#f0f0f0",} : {backgroundColor: "#f0f0f0",}]}>
+      <ScrollView style={[styles.listArea, colorScheme == 'dark' ? { backgroundColor: "#f0f0f0", } : { backgroundColor: "#f0f0f0", }]}>
         <Items
           key={`forceupdate-todo-${forceUpdateId}`}
           onPressItem={
-            (id:number) => {
+            (id: number, name: string) => {
+              navigation.navigate('LibraryWords', { group_id: id, group_name: name })
               Alert.alert('Group Remove', 'Are you sure to delete the group?', [
                 {
                   text: 'Cancel',
@@ -150,6 +163,61 @@ export default function Library() {
         />
       </ScrollView>
       {/* END: List */}
+
+    </View>
+  );
+}
+
+function LibraryWords(all: any) {
+  const [forceUpdate, forceUpdateId] = useForceUpdate();
+  const [groupId, setGroupId] = useState(all.route.params.group_id);
+  const [groupName, setGroupName] = useState(all.route.params.group_name);
+
+  let colorScheme = useColorScheme();
+
+  React.useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "create table if not exists words (id integer primary key not null, group_id integer, value text);"
+      );
+    });
+  }, []);
+
+  const add = (group_id: number, text: string) => {
+    // is text empty?
+    if (text === null || text === "") {
+      return false;
+    }
+
+    db.transaction(
+      (tx) => {
+        tx.executeSql("insert into words (group_id, value) values (?, ?)", [group_id, text]);
+        tx.executeSql("select * from words", [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+      },
+      null,
+      forceUpdate
+    );
+  };
+
+  const remove = (id: number) => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(`delete from words where id = ?;`, [id]);
+      },
+      null,
+      forceUpdate
+    );
+  };
+
+  return (
+    <View style={[
+      styles.container,
+      colorScheme == 'dark' ? { backgroundColor: "black", } : { backgroundColor: "white", }
+    ]}>
+
+      <Text style={{ color: 'red' }}>{groupId}{groupName}</Text>
 
     </View>
   );
