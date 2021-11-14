@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import Constants from "expo-constants";
@@ -16,7 +17,7 @@ function openDatabase() {
     return {
       transaction: () => {
         return {
-          executeSql: () => {},
+          executeSql: () => { },
         };
       },
     };
@@ -70,6 +71,8 @@ export default function Library() {
   const [text, setText] = React.useState(null);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
 
+  let colorScheme = useColorScheme();
+
   React.useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -97,47 +100,45 @@ export default function Library() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Add new words' group</Text>
+    <View style={[
+      styles.container,
+      colorScheme == 'dark' ? { backgroundColor: "black", } : { backgroundColor: "white", }
+    ]}>
 
-      {Platform.OS === "web" ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={styles.heading}>
-            Expo SQlite is not supported on web!
-          </Text>
-        </View>
-      ) : (
-        <>
-          <View style={styles.flexRow}>
-            <TextInput
-              onChangeText={(text) => setText(text)}
-              onSubmitEditing={() => {
-                add(text);
-                setText(null);
-              }}
-              placeholder="How will you call a new group?"
-              style={styles.input}
-              value={text}
-            />
-          </View>
-          <ScrollView style={styles.listArea}>
-            <Items
-              key={`forceupdate-todo-${forceUpdateId}`}
-              onPressItem={(id) =>
-                db.transaction(
-                  (tx) => {
-                    tx.executeSql(`delete from items where id = ?;`, [id]);
-                  },
-                  null,
-                  forceUpdate
-                )
-              }
-            />
-          </ScrollView>
-        </>
-      )}
+      <View style={styles.flexRow}>
+        <TextInput
+          onChangeText={(text) => setText(text)}
+          onSubmitEditing={() => {
+            add(text);
+            setText(null);
+          }}
+          placeholder="+ Group name"
+          placeholderTextColor={colorScheme == 'dark' ? "white": "black"}
+          style={[
+            styles.input,
+            colorScheme == 'dark'? {borderColor: "white",} : {borderColor: "black",}
+          ]}
+          value={text}
+        />
+      </View>
+
+      {/* List */}
+      <ScrollView style={styles.listArea}>
+        <Items
+          key={`forceupdate-todo-${forceUpdateId}`}
+          onPressItem={(id) =>
+            db.transaction(
+              (tx) => {
+                tx.executeSql(`delete from items where id = ?;`, [id]);
+              },
+              null,
+              forceUpdate
+            )
+          }
+        />
+      </ScrollView>
+      {/* END: List */}
+
     </View>
   );
 }
@@ -149,9 +150,7 @@ function useForceUpdate() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
   },
   heading: {
     fontSize: 20,
@@ -162,7 +161,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   input: {
-    borderColor: "#4630eb",
+    borderColor: "white",
     borderRadius: 4,
     borderWidth: 1,
     flex: 1,
