@@ -1,16 +1,53 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+import { Ionicons } from '@expo/vector-icons';
 import { RootTabScreenProps } from '../types';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+    <View style={{ flex: 1, }}>
+
+      {/* Header */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+        {/* Left */}
+        <View style={{ width: '33%' }}>
+        <Text style={{ }}> </Text>
+        </View>
+
+        {/* Center */}
+        <View style={{ width: '33%', flexDirection: 'row', justifyContent: 'center' }}>
+          <Text style={{ }}>GroupName</Text>
+        </View>
+
+        {/* Right */}
+        <Pressable
+          onPress={() => navigation.navigate('Modal')}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.5 : 1,
+            width: '33%',
+            flexDirection: 'row', 
+            justifyContent: 'flex-end'
+          })}>
+          <Ionicons
+            name="list-outline"
+            size={25}
+            color="gray"
+            style={{ marginRight: 15 }}
+          />
+        </Pressable>
+      </View>
+      {/* END: Header */}
+
+      {/* Card */}
+      <View style={styles.container}>
+        <View style={styles.card} lightColor="white" darkColor="#F2F2F2">
+          <Text lightColor="red" darkColor="#F2F2F2" style={{ fontSize: 24 }}>alalla</Text>
+        </View>
+      </View>
+      {/* END: Card */}
+
     </View>
   );
 }
@@ -21,13 +58,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  card: {
+    // sizes
+    width: '90%',
+    height: '90%',
+    // corners
+    borderRadius: 4,
   },
 });
