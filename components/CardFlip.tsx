@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from './Themed';
@@ -13,15 +12,16 @@ export default function CardFlip() {
       <TouchableOpacity style={styles.card} onPressIn={() => setSide((++side) % 2)}>
         <View style={styles.card} lightColor="#f7f7f7" darkColor="#292c34">
 
-          {side
-            ? (<Text lightColor="red" darkColor="white" style={{ fontSize: 35 }}>alalla</Text>)
-            : (
-              <View lightColor="#f7f7f7" darkColor="#292c34">
-                <Ionicons size={35} name="language-outline" color="red"/>
-                <Text lightColor="red" darkColor="white" style={{ fontSize: 35 }}>translate</Text>
-              </View>
-            )
-          }
+          {side == 0 ? (
+            // FRONT SIDE
+            <Text lightColor="red" darkColor="white" style={{ fontSize: 35 }}>alalla</Text>
+          ) : (
+            // BACK SIDE
+            <View lightColor="#f7f7f7" darkColor="#292c34">
+              <Ionicons size={35} name="language-outline" color="red" />
+              <Text lightColor="red" darkColor="white" style={{ fontSize: 35 }}>translate</Text>
+            </View>
+          )}
 
         </View>
       </TouchableOpacity>
