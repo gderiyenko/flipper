@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
+  Alert,
 } from "react-native";
-import Constants from "expo-constants";
 import * as SQLite from "expo-sqlite";
 
 function openDatabase() {
@@ -49,18 +49,17 @@ function Items({ onPressItem }) {
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionHeading}>Groups:</Text>
-      {items.map(({ id, done, value }) => (
+      {items.map(({ id, value }) => (
         <TouchableOpacity
           key={id}
           onPress={() => onPressItem && onPressItem(id)}
           style={{
-            backgroundColor: done ? "#1c9963" : "#fff",
             borderColor: "#000",
             borderWidth: 1,
             padding: 8,
           }}
         >
-          <Text style={{ color: done ? "#fff" : "#000" }}>{value}</Text>
+          <Text style={{ color: "#000" }}>{value}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -99,6 +98,16 @@ export default function Library() {
     );
   };
 
+  const remove = (id:number) => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(`delete from items where id = ?;`, [id]);
+      },
+      null,
+      forceUpdate
+    );
+  };
+
   return (
     <View style={[
       styles.container,
@@ -113,27 +122,30 @@ export default function Library() {
             setText(null);
           }}
           placeholder="+ Group name"
-          placeholderTextColor={colorScheme == 'dark' ? "white": "black"}
+          placeholderTextColor={colorScheme == 'dark' ? "white" : "black"}
           style={[
             styles.input,
-            colorScheme == 'dark'? {borderColor: "white",} : {borderColor: "black",}
+            colorScheme == 'dark' ? { borderColor: "white", } : { borderColor: "black", }
           ]}
           value={text}
         />
       </View>
 
       {/* List */}
-      <ScrollView style={styles.listArea}>
+      <ScrollView style={[styles.listArea, colorScheme =='dark' ? {backgroundColor: "#f0f0f0",} : {backgroundColor: "#f0f0f0",}]}>
         <Items
           key={`forceupdate-todo-${forceUpdateId}`}
-          onPressItem={(id) =>
-            db.transaction(
-              (tx) => {
-                tx.executeSql(`delete from items where id = ?;`, [id]);
-              },
-              null,
-              forceUpdate
-            )
+          onPressItem={
+            (id:number) => {
+              Alert.alert('Group Remove', 'Are you sure to delete the group?', [
+                {
+                  text: 'Cancel',
+                  onPress: () => { },
+                  style: 'cancel',
+                },
+                { text: 'Remove', onPress: () => { remove(id); } },
+              ]);
+            }
           }
         />
       </ScrollView>
@@ -170,7 +182,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   listArea: {
-    backgroundColor: "#f0f0f0",
     flex: 1,
     paddingTop: 16,
   },
