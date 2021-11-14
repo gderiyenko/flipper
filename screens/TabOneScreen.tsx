@@ -4,6 +4,7 @@ import { StyleSheet, Pressable } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { RootTabScreenProps } from '../types';
+import CardFlip from '../components/CardFlip';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   return (
@@ -40,13 +41,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       </View>
       {/* END: Header */}
 
-      {/* Card */}
-      <View style={styles.container}>
-        <View style={styles.card} lightColor="white" darkColor="#F2F2F2">
-          <Text lightColor="red" darkColor="#F2F2F2" style={{ fontSize: 24 }}>alalla</Text>
-        </View>
-      </View>
-      {/* END: Card */}
+      <CardFlip />
 
     </View>
   );
