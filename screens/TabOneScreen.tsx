@@ -6,7 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { RootTabScreenProps } from '../types';
 import CardFlip from '../components/CardFlip';
 
-export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>, groupParams?:any) {
+  let [currentGroupName, setCurrentGroupName] = React.useState(groupParams.name ?? "All Groups");
+  let [currentGroupWhere, setCurrentGroupWhere] = React.useState(groupParams.where ?? "1");
   return (
     <View style={{ flex: 1, }}>
 
@@ -19,7 +21,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
         {/* Center */}
         <View style={{ width: '33%', flexDirection: 'row', justifyContent: 'center' }}>
-          <Text style={{ }}>GroupName</Text>
+          <Text style={{ }}>{currentGroupName}</Text>
         </View>
 
         {/* Right */}
@@ -41,7 +43,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       </View>
       {/* END: Header */}
 
-      <CardFlip />
+      <CardFlip/>
 
     </View>
   );

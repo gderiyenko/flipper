@@ -4,19 +4,19 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import Constants from "expo-constants";
 import * as SQLite from "expo-sqlite";
+import TabOneScreen from "../screens/TabOneScreen";
 
 function openDatabase() {
   if (Platform.OS === "web") {
     return {
       transaction: () => {
         return {
-          executeSql: () => {},
+          executeSql: () => { },
         };
       },
     };
@@ -47,11 +47,10 @@ function Items({ onPressItem }) {
 
   return (
     <View style={styles.sectionContainer}>
-      <Text style={styles.sectionHeading}>Groups:</Text>
       {items.map(({ id, done, value }) => (
         <TouchableOpacity
           key={id}
-          onPress={() => onPressItem && onPressItem(id)}
+          onPress={(() => onPressItem && onPressItem(id))}
           style={{
             backgroundColor: done ? "#1c9963" : "#fff",
             borderColor: "#000",
@@ -66,7 +65,7 @@ function Items({ onPressItem }) {
   );
 }
 
-export default function Library() {
+export default function PickGroup(n:any) {
   const [text, setText] = React.useState(null);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
 
@@ -98,46 +97,14 @@ export default function Library() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>SQLite Example</Text>
-
-      {Platform.OS === "web" ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={styles.heading}>
-            Expo SQlite is not supported on web!
-          </Text>
-        </View>
-      ) : (
-        <>
-          <View style={styles.flexRow}>
-            <TextInput
-              onChangeText={(text) => setText(text)}
-              onSubmitEditing={() => {
-                add(text);
-                setText(null);
-              }}
-              placeholder="what do you need to do?"
-              style={styles.input}
-              value={text}
-            />
-          </View>
-          <ScrollView style={styles.listArea}>
-            <Items
-              key={`forceupdate-todo-${forceUpdateId}`}
-              onPressItem={(id) =>
-                db.transaction(
-                  (tx) => {
-                    tx.executeSql(`delete from items where id = ?;`, [id]);
-                  },
-                  null,
-                  forceUpdate
-                )
-              }
-            />
-          </ScrollView>
-        </>
-      )}
+      <ScrollView style={styles.listArea}>
+        <Items
+          key={`forceupdate-todo-${forceUpdateId}`}
+          onPressItem={(id) =>
+            n.n.navigation.goBack({groupParams: {name: 'kek', where : '1'}})
+          }
+        />
+      </ScrollView>
     </View>
   );
 }
@@ -153,34 +120,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Constants.statusBarHeight,
   },
-  heading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  flexRow: {
-    flexDirection: "row",
-  },
-  input: {
-    borderColor: "#4630eb",
-    borderRadius: 4,
-    borderWidth: 1,
-    flex: 1,
-    height: 48,
-    margin: 16,
-    padding: 8,
-  },
   listArea: {
-    backgroundColor: "#f0f0f0",
     flex: 1,
     paddingTop: 16,
   },
   sectionContainer: {
     marginBottom: 16,
     marginHorizontal: 16,
-  },
-  sectionHeading: {
-    fontSize: 18,
-    marginBottom: 8,
   },
 });

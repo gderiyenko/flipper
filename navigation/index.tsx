@@ -66,9 +66,8 @@ function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Words',
+          title: 'Practice',
           tabBarIcon: ({ color }) => <Ionicons name="globe-outline" color={color} />,
-
         })}
       />
       <BottomTab.Screen
