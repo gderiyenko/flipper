@@ -77,7 +77,7 @@ export default function LibraryWords(all: any) {
   return (
     <View style={[
       styles.container,
-      colorScheme == 'dark' ? { backgroundColor: "black", } : { backgroundColor: "white", }
+      { backgroundColor: colorScheme == 'dark' ? "black" : "white", }
     ]}>
 
       {/* Header */}
@@ -85,11 +85,10 @@ export default function LibraryWords(all: any) {
         <View
           style={[
             styles.input,
-            { justifyContent: 'center', alignItems: 'center' },
-            colorScheme == 'dark' ? { borderColor: "white", } : { borderColor: "black", }
+            { borderColor: colorScheme == 'dark' ? "white" : "black", },
           ]}
         >
-          <Text style={[colorScheme == 'dark' ? { color: "white", } : { color: "black", }]}>{groupName}</Text>
+          <Text style={{ color: colorScheme == 'dark' ? "white" : "black", }}>{groupName}</Text>
         </View>
       </View>
       {/* END: Header */}
@@ -200,6 +199,8 @@ const styles = StyleSheet.create({
     height: 48,
     margin: 16,
     padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   addWords: {
