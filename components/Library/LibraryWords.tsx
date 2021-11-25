@@ -50,21 +50,28 @@ export default function LibraryWords(all: any) {
 
   const add = (group_id: number, native_text: string, translate_text: string) => {
 
-    // TODO: is text empty?
     if (native_text === null || translate_text === null) { return false; }
-    console.log(group_id, native_text, translate_text);
-    db.transaction(
-      (tx) => {
-        tx.executeSql("insert into words (group_id, native_text, translate_text) values (?, ?, ?)", [group_id, native_text, translate_text]);
-        tx.executeSql(
-          "select * from words where group_id = ?;",
-          [groupId],
-          (_, { rows: { _array } }) => setItems(_array.reverse())
+
+    const native_arr = native_text.split("\n");
+    const translate_arr = translate_text.split("\n");
+
+    for (let i = 0; i < native_arr.length; ++i) {
+      if (native_arr[i].length > 0 && translate_arr[i].length > 0) {
+        db.transaction(
+          (tx) => {
+            tx.executeSql("insert into words (group_id, native_text, translate_text) values (?, ?, ?)", [group_id, native_arr[i], translate_arr[i]]);
+            tx.executeSql(
+              "select * from words where group_id = ?;",
+              [groupId],
+              (_, { rows: { _array } }) => setItems(_array.reverse())
+            );
+          },
+          (err) => { console.log(err) },
+          () => { forceUpdate; }
         );
-      },
-      (err) => { console.log(err) },
-      () => { forceUpdate; }
-    );
+      }
+    }
+
   };
 
   let equal =
@@ -166,6 +173,9 @@ export default function LibraryWords(all: any) {
             <Text style={{ color: colorScheme == 'dark' ? "white" : "black", }}>{translate_text}</Text>
           </TouchableOpacity>
         ))}
+        <View style={{height: 100}}>
+
+        </View>
       </ScrollView>
       {/* END: List */}
 
