@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import * as SQLite from "expo-sqlite";
 import { Text, View } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -79,18 +79,3 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    // sizes
-    width: '90%',
-    height: '90%',
-    // corners
-    borderRadius: 4,
-  },
-});
