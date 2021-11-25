@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,6 +9,7 @@ import {
   View,
   Alert,
 } from "react-native";
+import { Swipeable } from 'react-native-gesture-handler';
 import * as SQLite from "expo-sqlite";
 
 function openDatabase() {
@@ -19,7 +19,7 @@ function openDatabase() {
 
 const db = openDatabase();
 
-function Items({ onPressItem }) {
+function Items({ onPressItem, onItemDelete }) {
   const [items, setItems] = React.useState(null);
   let colorScheme = useColorScheme();
 
@@ -33,6 +33,17 @@ function Items({ onPressItem }) {
     });
   }, []);
 
+  function clickRemoveGroup() {
+    Alert.alert('Group Remove', 'Are you sure to delete the group?', [
+      {
+        text: 'Cancel',
+        onPress: () => { },
+        style: 'cancel',
+      },
+      { text: 'Remove', onPress: () => { onItemDelete(id); } },
+    ]);
+  }
+
   if (items === null || items.length === 0) {
     return null;
   }
@@ -41,26 +52,36 @@ function Items({ onPressItem }) {
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionHeading}>Groups:</Text>
       {items.map(({ id, value }) => (
-        <TouchableOpacity
+        <Swipeable
+          containerStyle={{ width: '100%', borderBottomWidth: 1, borderColor: "gray", backgroundColor: colorScheme == 'dark' ? "#292c34" : "#f0f0f0", }}
           key={id}
-          onPress={() => onPressItem && onPressItem(id, value)}
-          style={{
-            marginTop: 10,
-            borderColor: "#000",
-            borderWidth: 1,
-            padding: 8,
-          }}
-        >
-          <Text style={colorScheme == 'dark' ? { color: "white", } : { color: "black", } }>{value}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+          renderRightActions={() => {
+            return (
+              <TouchableOpacity
+                style={[{ width: "20%", backgroundColor: 'red' },]}
+                onPress={() => clickRemoveGroup()} />
+            )
+          }}>
+          <TouchableOpacity
+            onPress={() => onPressItem && onPressItem(id, value)}
+            style={{
+              padding: 8,
+              paddingTop: 18,
+              backgroundColor: colorScheme == 'dark' ? "#292c34" : "#f0f0f0",
+            }}
+          >
+            <Text style={colorScheme == 'dark' ? { color: "white", } : { color: "black", }}>{value}</Text>
+          </TouchableOpacity>
+        </Swipeable>
+      ))
+      }
+    </View >
   );
 }
 
 
 export default function LibraryGroups({ navigation }: any) {
-  const [text, setText] = React.useState(null);
+  const [text, setText] = React.useState('');
   const [forceUpdate, forceUpdateId] = useForceUpdate();
 
   let colorScheme = useColorScheme();
@@ -73,6 +94,12 @@ export default function LibraryGroups({ navigation }: any) {
     });
   }, []);
 
+  /**
+   * Add new Group to list.
+   * 
+   * @param text 
+   * @returns 
+   */
   const add = (text) => {
     // is text empty?
     if (text === null || text === "") {
@@ -91,7 +118,12 @@ export default function LibraryGroups({ navigation }: any) {
     );
   };
 
-  const remove = (id: number) => {
+  /**
+   * Remove group from list by ID
+   * 
+   * @param id 
+   */
+  const removeGroup = (id: number) => {
     db.transaction(
       (tx) => {
         tx.executeSql(`delete from items where id = ?;`, [id]);
@@ -112,13 +144,17 @@ export default function LibraryGroups({ navigation }: any) {
           onChangeText={(text) => setText(text)}
           onSubmitEditing={() => {
             add(text);
-            setText(null);
+            setText('');
           }}
+          selectionColor={'red'}
           placeholder="+ Group name"
           placeholderTextColor={colorScheme == 'dark' ? "white" : "black"}
           style={[
             styles.input,
-            colorScheme == 'dark' ? { borderColor: "white", } : { borderColor: "black", }
+            {
+              borderColor: colorScheme == 'dark' ? "white" : "black",
+              color: colorScheme == 'dark' ? "white" : "black",
+            }
           ]}
           value={text}
         />
@@ -131,16 +167,9 @@ export default function LibraryGroups({ navigation }: any) {
           onPressItem={
             (id: number, name: string) => {
               navigation.navigate('LibraryWords', { group_id: id, group_name: name })
-              Alert.alert('Group Remove', 'Are you sure to delete the group?', [
-                {
-                  text: 'Cancel',
-                  onPress: () => { },
-                  style: 'cancel',
-                },
-                { text: 'Remove', onPress: () => { remove(id); } },
-              ]);
             }
           }
+          onItemDelete={(id: number) => removeGroup(id)}
         />
       </ScrollView>
       {/* END: List */}
@@ -180,7 +209,7 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     marginBottom: 16,
-    marginHorizontal: 16,
+    marginLeft: 16,
   },
   sectionHeading: {
     fontSize: 18,
