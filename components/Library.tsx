@@ -5,7 +5,7 @@ import LibraryGroups from "./Library/LibraryGroups";
 
 const Lib = createNativeStackNavigator();
 
-export default function Library({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Library() {
   return (
     <Lib.Navigator>
       <Lib.Screen name="LibraryGroups" component={LibraryGroups} options={{ headerShown: false }} />
