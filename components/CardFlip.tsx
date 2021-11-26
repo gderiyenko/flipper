@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from './Themed';
 
 export default function CardFlip(props) {
@@ -9,30 +9,34 @@ export default function CardFlip(props) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.card} onPress={() => setSide((++side) % 2)}>
-        <View style={styles.card} lightColor="#f7f7f7" darkColor="#292c34">
+      <View style={[styles.card, { position: 'absolute', zIndex: 1 }]} >
+
+      </View>
+      <TouchableWithoutFeedback onPress={() => setSide((++side) % 2)} >
+        <View style={[styles.card, { zIndex: 20 }]} lightColor="#f7f7f7" darkColor="#292c34">
           {side == 0 ? <Ionicons size={35} name="language-outline" color="red" /> : <></>}
-          <View lightColor="#f7f7f7" darkColor="#292c34">
-            <Text lightColor="black" darkColor="white" style={{ fontSize: 35 }}>
-              {side == 0 ? props.translate : props.native}
-            </Text>
-          </View>
+          <Text style={{ fontSize: 35 }}>
+            {side == 0 ? props.translate : props.native}
+          </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    zIndex: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
   card: {
+    right: '1%',
     // sizes
+    height: '92%',
     width: '90%',
-    height: '90%',
+
     // corners
     borderRadius: 4,
 

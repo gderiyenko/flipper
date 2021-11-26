@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import * as SQLite from "expo-sqlite";
-import TabOneScreen from "../screens/TabOneScreen";
 
 function openDatabase() {
   if (Platform.OS === "web") {
@@ -68,14 +67,6 @@ function Items({ onPressItem }) {
 export default function PickGroup(n:any) {
   const [text, setText] = React.useState(null);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
-
-  React.useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "create table if not exists items (id integer primary key not null, value text);"
-      );
-    });
-  }, []);
 
   const add = (text) => {
     // is text empty?

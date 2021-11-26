@@ -31,18 +31,14 @@ export default function LibraryWords(all: any) {
   let colorScheme = useColorScheme();
 
   React.useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "create table if not exists words (id integer primary key not null, group_id integer, native_text text, translate_text text );"
-      );
-    });
-    db.transaction((tx) => {
-      tx.executeSql(
-        "select * from words where group_id = ?;",
-        [groupId],
-        (_, { rows: { _array } }) => setItems(_array.reverse())
-      );
-    },
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          "select * from words where group_id = ?;",
+          [groupId],
+          (_, { rows: { _array } }) => setItems(_array.reverse())
+        );
+      },
       (err) => { console.log(err) },
       () => { console.log(items) },
     );
@@ -173,7 +169,7 @@ export default function LibraryWords(all: any) {
             <Text style={{ color: colorScheme == 'dark' ? "white" : "black", }}>{translate_text}</Text>
           </TouchableOpacity>
         ))}
-        <View style={{height: 100}}>
+        <View style={{ height: 100 }}>
 
         </View>
       </ScrollView>

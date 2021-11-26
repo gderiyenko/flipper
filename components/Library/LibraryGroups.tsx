@@ -86,14 +86,6 @@ export default function LibraryGroups({ navigation }: any) {
 
   let colorScheme = useColorScheme();
 
-  React.useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "create table if not exists items (id integer primary key not null, value text);"
-      );
-    });
-  }, []);
-
   /**
    * Add new Group to list.
    * 
