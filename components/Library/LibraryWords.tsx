@@ -72,9 +72,11 @@ export default function LibraryWords(all: any) {
 
   let equal =
     (
+      (translateText ?? '').length > 0 // is not empty translate
+      &&
+      (nativeText ?? '').length > 0 // is not empty native
+      &&
       (translateText ?? '').split(/\r\n|\r|\n/).length == (nativeText ?? '').split(/\r\n|\r|\n/).length
-    ) && (
-      (nativeText ?? '').split(/\r\n|\r|\n/).length > 1
     );
 
   return (
