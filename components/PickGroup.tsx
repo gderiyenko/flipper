@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import * as SQLite from "expo-sqlite";
+import { Ionicons } from "@expo/vector-icons";
 
 function openDatabase() {
   if (Platform.OS === "web") {
@@ -57,14 +58,18 @@ function Items({ onPressItem }) {
             padding: 8,
           }}
         >
-          <Text style={{ color: done ? "#fff" : "#000" }}>{value}</Text>
+
+          <Text style={{ color: done ? "#fff" : "#000" }}>
+            <Ionicons size={35} name="ellipse-outline" color="red" />
+            {value}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
   );
 }
 
-export default function PickGroup(n:any) {
+export default function PickGroup(props: any) {
   const [text, setText] = React.useState(null);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
 
@@ -91,8 +96,10 @@ export default function PickGroup(n:any) {
       <ScrollView style={styles.listArea}>
         <Items
           key={`forceupdate-todo-${forceUpdateId}`}
-          onPressItem={(id) =>
-            n.n.navigation.goBack({groupParams: {name: 'kek', where : '1'}})
+          onPressItem={
+            (id) => {
+              props.navigation.goBack();
+            }
           }
         />
       </ScrollView>
