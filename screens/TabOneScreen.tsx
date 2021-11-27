@@ -106,7 +106,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             }} />
           )
         }}
-        onSwipeableRightWillOpen={
+        onSwipeableRightOpen={
           () => {
             cardRef.close();
             cardReload(true);
