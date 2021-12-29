@@ -7,7 +7,6 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { RootTabScreenProps } from '../types';
 import CardFlip from '../components/CardFlip';
 import initDB from '../components/InitDB';
-import { Profiles } from '../components/Tind';
 
 function openDatabase() {
   const db = SQLite.openDatabase("db.db");
@@ -15,33 +14,6 @@ function openDatabase() {
 }
 
 const db = openDatabase();
-
-const profiles: Profiles[] = [
-  {
-    id: "1",
-    name: "Caroline",
-    age: 24,
-    profile: null,
-  },
-  {
-    id: "2",
-    name: "Jack",
-    age: 30,
-    profile: null,
-  },
-  {
-    id: "3",
-    name: "Anet",
-    age: 21,
-    profile: null,
-  },
-  {
-    id: "4",
-    name: "John",
-    age: 28,
-    profile: null,
-  },
-];
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>, groupParams?: any) {
   let [currentGroupName, setCurrentGroupName] = React.useState(groupParams.name ?? "All Groups");
@@ -122,7 +94,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       </>
 
       {/* Front Card */}
-      {/* <Swipeable
+      <Swipeable
         containerStyle={{ width: '100%', height: '100%' }}
         ref={(ref: any) => setRef(ref)}
         renderRightActions={() => {
@@ -147,9 +119,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           reload || typeof current == 'undefined'
             ? <></>
             : <CardFlip native={current.native_text} translate={current.translate_text}></CardFlip>}
-      </Swipeable> */}
-
-<Profiles {...{ profiles }} />
+      </Swipeable>
 
     </View>
   );
