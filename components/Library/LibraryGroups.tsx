@@ -126,10 +126,7 @@ export default function LibraryGroups({ navigation }: any) {
   };
 
   return (
-    <View style={[
-      styles.container,
-      colorScheme == 'dark' ? { backgroundColor: "black", } : { backgroundColor: "white", }
-    ]}>
+    <View style={{ backgroundColor: colorScheme == 'dark' ? "black" : "white", }} >
 
       <View style={styles.flexRow}>
         <TextInput
@@ -176,9 +173,6 @@ function useForceUpdate() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   heading: {
     fontSize: 20,
     fontWeight: "bold",
@@ -196,7 +190,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   listArea: {
-    flex: 1,
     paddingTop: 16,
   },
   sectionContainer: {
